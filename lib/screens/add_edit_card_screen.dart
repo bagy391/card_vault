@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/credit_card.dart';
 import '../providers/card_provider.dart';
+import '../utils/card_utils.dart';
 
 class ExpiryDateFormatter extends TextInputFormatter {
   @override
@@ -198,15 +199,9 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                 height: 50,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 5,
+                  itemCount: CardUtils.cardGradients.length,
                   itemBuilder: (context, index) {
-                    final gradients = [
-                      Colors.purple,
-                      Colors.blue,
-                      Colors.green,
-                      Colors.red,
-                      Colors.grey,
-                    ];
+                    final gradient = CardUtils.cardGradients[index];
                     return GestureDetector(
                       onTap: () => setState(() => _selectedColorIndex = index),
                       child: Container(
@@ -214,7 +209,11 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                         height: 40,
                         margin: const EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
-                          color: gradients[index],
+                          gradient: LinearGradient(
+                            colors: gradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           shape: BoxShape.circle,
                           border: _selectedColorIndex == index
                               ? Border.all(color: Colors.white, width: 3)

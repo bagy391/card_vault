@@ -22,60 +22,73 @@ class CardUtils {
 
     String number = input.replaceAll(RegExp(r'\D'), '');
 
+    // 1. RuPay
+    // 60 (exclude 6011 for Discover), 652, 81, 82, 508
+    if (RegExp(r'^(508|60(?!11)|652|81|82)').hasMatch(number)) {
+      return CardType.rupay;
+    }
+
+    // 2. Visa
     if (number.startsWith('4')) {
       return CardType.visa;
     } 
     
-    // Macbook: 51-55 or 2221-2720
+    // 3. Mastercard
+    // 51-55 or 2221-2720
     if (RegExp(r'^(5[1-5]|2(22[1-9]|2[3-9]|[3-6]|7[0-1]|720))').hasMatch(number)) {
       return CardType.mastercard;
     }
     
-    // Amex: 34, 37
+    // 4. Amex
+    // 34, 37
     if (RegExp(r'^3[47]').hasMatch(number)) {
       return CardType.amex;
     }
     
-    // JCB: 3528-3589
-    if (RegExp(r'^35(2[8-9]|[3-8])').hasMatch(number)) {
-      return CardType.jcb;
-    }
-    
-    // UnionPay: 62
-    if (number.startsWith('62')) {
-      return CardType.unionPay;
-    }
-    
-    // Diners Club: 300-305, 309, 36, 38, 39
+    // 5. Diners Club
+    // 300-305, 309, 36, 38, 39
     if (RegExp(r'^3(0[0-5]|09|6|8|9)').hasMatch(number)) {
       return CardType.dinersClub;
     }
-    
-    // Discover: 6011, 65, 644-649, 622
-    // Note: 65 is also shared with RuPay broad range, but often treated as Discover/RuPay.
+
+    // 6. Discover
+    // 6011, 65, 644-649, 622
     if (RegExp(r'^6(011|5|4[4-9]|22)').hasMatch(number)) {
       return CardType.discover;
     }
     
-    // RuPay: 60, 65, 81, 50, 35
-    // 35 is handled by JCB above (overlaps). 50 handled here. 60/65 handled by Discover?
-    // User provided broad RuPay regex: 60, 65, 81, 50, 35.
-    // Since 6011 is Discover, but 60 is RuPay... 
-    // And 65 is Discover and RuPay.
-    // I will check for generic RuPay prefixes here.
-    if (RegExp(r'^(60|65|81|50|35)').hasMatch(number)) {
-      return CardType.rupay;
+    // 7. JCB
+    // 3528-3589
+    if (RegExp(r'^35(2[8-9]|[3-8])').hasMatch(number)) {
+      return CardType.jcb;
     }
     
-    // Maestro: 50, 56-69, 6
-    // 50 overlaps RuPay. 
-    // catch-all for 6... might be Maestro.
+    // 8. UnionPay
+    if (number.startsWith('62')) {
+      return CardType.unionPay;
+    }
+    
+    // 9. Maestro
+    // 50, 56-69
+    // Note: 508 is RuPay, so we check 50 after RuPay.
     if (RegExp(r'^(5[06-9]|6)').hasMatch(number)) {
       return CardType.maestro;
     }
 
     return CardType.other;
   }
+
+  static const List<List<Color>> cardGradients = [
+    [Color(0xFF4A00E0), Color(0xFF8E2DE2)], // Purple
+    [Color(0xFF000428), Color(0xFF004e92)], // Blue
+    [Color(0xFF11998e), Color(0xFF38ef7d)], // Green
+    [Color(0xFFcb2d3e), Color(0xFFef473a)], // Red
+    [Color(0xFF232526), Color(0xFF414345)], // Black
+    [Color(0xFFFF512F), Color(0xFFDD2476)], // Sunset
+    [Color(0xFF2193b0), Color(0xFF6dd5ed)], // Sea
+    [Color(0xFFF2994A), Color(0xFFF2C94C)], // Gold
+    [Color(0xFF36D1DC), Color(0xFF5B86E5)], // Cosmic
+  ];
 
   static Widget getCardIcon(CardType type) {
     switch (type) {

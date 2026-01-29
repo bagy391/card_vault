@@ -27,13 +27,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
   @override
   Widget build(BuildContext context) {
     // Determine color based on index
-    final List<List<Color>> gradients = [
-      [const Color(0xFF4A00E0), const Color(0xFF8E2DE2)], // Purple
-      [const Color(0xFF000428), const Color(0xFF004e92)], // Blue
-      [const Color(0xFF11998e), const Color(0xFF38ef7d)], // Green
-      [const Color(0xFFcb2d3e), const Color(0xFFef473a)], // Red
-      [const Color(0xFF232526), const Color(0xFF414345)], // Black
-    ];
+    final gradients = CardUtils.cardGradients;
 
     final gradientColors = gradients[widget.card.colorIndex % gradients.length];
 
@@ -44,6 +38,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget> {
         data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
         child: Container(
           height: 200,
+          clipBehavior: Clip.antiAlias,
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),

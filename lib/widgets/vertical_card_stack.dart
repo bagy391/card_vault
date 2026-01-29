@@ -18,18 +18,10 @@ class VerticalCardStack extends StatefulWidget {
 
 class _VerticalCardStackState extends State<VerticalCardStack> {
   String? _expandedCardId;
-  final ScrollController _scrollController = ScrollController();
-
   // Constants for layout
   final double _cardHeight = 200.0;
   final double _collapsedOffset = 70.0;
   final double _expandedGap = 150.0;
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   void _toggleCard(CreditCard card) {
     setState(() {
@@ -37,23 +29,6 @@ class _VerticalCardStackState extends State<VerticalCardStack> {
         _expandedCardId = null;
       } else {
         _expandedCardId = card.id;
-        
-        // Smooth scroll to expanded card
-        final expandedIndex = widget.cards.indexOf(card);
-        final targetOffset = expandedIndex * _collapsedOffset;
-        
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (_scrollController.hasClients) {
-            _scrollController.animateTo(
-              targetOffset.clamp(
-                0.0,
-                _scrollController.position.maxScrollExtent,
-              ),
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOutCubic,
-            );
-          }
-        });
       }
     });
   }
@@ -69,51 +44,45 @@ class _VerticalCardStackState extends State<VerticalCardStack> {
       totalHeight += _expandedGap;
     }
 
-    return SingleChildScrollView(
-      controller: _scrollController,
-      physics: const BouncingScrollPhysics(
-        parent: AlwaysScrollableScrollPhysics(),
-      ),
-      child: SizedBox(
-        height: totalHeight,
-        child: Stack(
-          children: List.generate(widget.cards.length, (index) {
-            final card = widget.cards[index];
-            
-            // Calculate position
-            bool isBelowExpanded = false;
-            if (_expandedCardId != null) {
-              final expandedIndex = widget.cards
-                  .indexWhere((c) => c.id == _expandedCardId);
-              isBelowExpanded = index > expandedIndex;
-            }
+    return SizedBox(
+      height: totalHeight,
+      child: Stack(
+        children: List.generate(widget.cards.length, (index) {
+          final card = widget.cards[index];
+          
+          // Calculate position
+          bool isBelowExpanded = false;
+          if (_expandedCardId != null) {
+            final expandedIndex = widget.cards
+                .indexWhere((c) => c.id == _expandedCardId);
+            isBelowExpanded = index > expandedIndex;
+          }
 
-            double topPos = index * _collapsedOffset;
-            if (isBelowExpanded) {
-              topPos += _expandedGap;
-            }
+          double topPos = index * _collapsedOffset;
+          if (isBelowExpanded) {
+            topPos += _expandedGap;
+          }
 
-            return AnimatedPositioned(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOutCubic,
-              top: topPos + 40,
-              left: 0,
-              right: 0,
-              height: _cardHeight,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Hero(
-                  tag: card.id,
-                  child: CreditCardWidget(
-                    card: card,
-                    onTap: () => _toggleCard(card),
-                    onLongPress: () => widget.onCardTap(card),
-                  ),
+          return AnimatedPositioned(
+            duration: const Duration(milliseconds: 400),
+            curve: Curves.easeInOutCubic,
+            top: topPos + 40,
+            left: 0,
+            right: 0,
+            height: _cardHeight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Hero(
+                tag: card.id,
+                child: CreditCardWidget(
+                  card: card,
+                  onTap: () => _toggleCard(card),
+                  onLongPress: () => widget.onCardTap(card),
                 ),
               ),
-            );
-          }),
-        ),
+            ),
+          );
+        }),
       ),
     );
   }
