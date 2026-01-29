@@ -38,4 +38,14 @@ class CardProvider with ChangeNotifier {
     notifyListeners();
     await _storageService.saveCards(_cards);
   }
+
+  Future<void> reorderCards(int oldIndex, int newIndex) async {
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    final CreditCard item = _cards.removeAt(oldIndex);
+    _cards.insert(newIndex, item);
+    notifyListeners();
+    await _storageService.saveCards(_cards);
+  }
 }
