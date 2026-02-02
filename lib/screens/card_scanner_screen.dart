@@ -259,7 +259,7 @@ class _CardScannerScreenState extends State<CardScannerScreen> {
 
     // Relaxed condition
     if (number != null) {
-      debugPrint('Card Data Found: Number=$number, Expiry=$expiry, Name=$name, CVV=$cvv');
+      // debugPrint('Card Data Found');
       return {
         'cardNumber': number,
         'expiryDate': expiry ?? '',
