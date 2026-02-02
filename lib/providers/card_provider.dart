@@ -46,6 +46,13 @@ class CardProvider with ChangeNotifier {
     final CreditCard item = _cards.removeAt(oldIndex);
     _cards.insert(newIndex, item);
     notifyListeners();
+    notifyListeners();
     await _storageService.saveCards(_cards);
+  }
+
+  Future<void> deleteAllCards() async {
+    _cards.clear();
+    notifyListeners();
+    await _storageService.clearAll();
   }
 }

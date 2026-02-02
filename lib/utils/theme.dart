@@ -17,4 +17,20 @@ class AppTheme {
     ),
     useMaterial3: true,
   );
+
+  static final ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: const Color(0xFFF5F5F5),
+    primaryColor: const Color(0xFF6200EE),
+    colorScheme: const ColorScheme.light(
+      primary: Color(0xFF6200EE),
+      secondary: Color(0xFF03DAC6),
+      surface: Colors.white,
+      error: Color(0xFFB00020),
+    ),
+    textTheme: GoogleFonts.interTextTheme(
+      ThemeData.light().textTheme,
+    ),
+    useMaterial3: true,
+  );
 }

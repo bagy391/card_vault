@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/card_provider.dart';
 import '../widgets/vertical_card_stack.dart';
 import 'add_edit_card_screen.dart';
+import 'settings_screen.dart';
 import '../utils/card_utils.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,6 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('My Wallet'),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.sort),
             onPressed: () {

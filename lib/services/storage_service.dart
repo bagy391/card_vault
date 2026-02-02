@@ -64,4 +64,11 @@ class StorageService {
       return [];
     }
   }
+
+  // Clear all data
+  Future<void> clearAll() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_dataKey);
+    // Optional: Rotate encryption key? For now just clearing data is fine.
+  }
 }

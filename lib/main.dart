@@ -5,11 +5,18 @@ import 'screens/auth_screen.dart';
 import 'screens/home_screen.dart';
 import 'providers/card_provider.dart';
 
-void main() {
+import 'providers/theme_provider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final themeProvider = ThemeProvider();
+  await themeProvider.loadTheme();
+  
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CardProvider()),
+        ChangeNotifierProvider.value(value: themeProvider), // Use existing instance
       ],
       child: const MyApp(),
     ),
@@ -21,15 +28,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Card Vault',
-      theme: AppTheme.darkTheme,
-      initialRoute: '/auth',
-      routes: {
-        '/auth': (context) => const AuthScreen(),
-        '/home': (context) => const HomeScreen(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Card Vault',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          initialRoute: '/auth',
+          routes: {
+            '/auth': (context) => const AuthScreen(),
+            '/home': (context) => const HomeScreen(),
+          },
+          debugShowCheckedModeBanner: false,
+        );
       },
-      debugShowCheckedModeBanner: false,
     );
   }
 }
