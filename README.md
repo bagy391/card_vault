@@ -26,6 +26,11 @@ Card Vault is built with a **Security-First** and **Offline-Only** architecture.
 4.  **Biometric & Device Lock**:
     *   The app is protected by your device's native authentication (Fingerprint, Face ID, or PIN/Pattern).
     *   You must authenticate every time you launch the app to access your vault.
+    
+5.  **Secure Card Scanning (OCR)**:
+    *   **On-Device Processing**: The card scanner uses **Google ML Kit's On-Device Text Recognition**.
+    *   **Zero Data Transmission**: The scanning process happens entirely on your phone. No image or card data is ever sent to Google's servers or any third-party cloud for processing.
+    *   **No Image Storage**: The camera images used for scanning are processed in temporary memory and are **not** saved to your device's gallery or permanent storage.
 
 ## ✨ Features
 

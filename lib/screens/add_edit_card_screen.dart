@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../models/credit_card.dart';
 import '../providers/card_provider.dart';
 import '../utils/card_utils.dart';
+import 'card_scanner_screen.dart';
 
 class ExpiryDateFormatter extends TextInputFormatter {
   @override
@@ -100,6 +101,27 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
     }
   }
 
+  Future<void> _scanCard() async {
+    final result = await Navigator.of(context).push<Map<String, String>>(
+      MaterialPageRoute(builder: (context) => const CardScannerScreen()),
+    );
+
+    if (result != null) {
+      if (result['cardNumber'] != null) {
+        _cardNumberController.text = result['cardNumber']!;
+      }
+      if (result['expiryDate'] != null) {
+        _expiryDateController.text = result['expiryDate']!;
+      }
+      if (result['cardHolderName'] != null && result['cardHolderName']!.isNotEmpty) {
+        _holderNameController.text = result['cardHolderName']!;
+      }
+      if (result['cvv'] != null) {
+        _cvvController.text = result['cvv']!;
+      }
+    }
+  }
+
   void _deleteCard() {
     if (widget.card != null) {
       Provider.of<CardProvider>(context, listen: false).deleteCard(widget.card!.id);
@@ -113,6 +135,10 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
       appBar: AppBar(
         title: Text(widget.card != null ? 'Edit Card' : 'Add Card'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.camera_alt),
+            onPressed: _scanCard,
+          ),
           if (widget.card != null)
             IconButton(
               icon: const Icon(Icons.delete),
@@ -180,7 +206,7 @@ class _AddEditCardScreenState extends State<AddEditCardScreen> {
                         FilteringTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(3),
                       ],
-                      obscureText: true,
+                      obscureText: false,
                       validator: (value) => (value != null && value.length == 3) ? null : '3 digits',
                     ),
                   ),
